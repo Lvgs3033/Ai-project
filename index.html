@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Medical Diagnosis Assistant</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f5ff;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #3498db;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        .symptoms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .symptom-checkbox {
+            display: flex;
+            align-items: center;
+        }
+        .symptom-checkbox input {
+            margin-right: 8px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .disease-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+        }
+        .disease-card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .probability {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .attribute {
+            margin-bottom: 5px;
+        }
+        .attribute-name {
+            font-weight: bold;
+            display: inline-block;
+            width: 150px;
+        }
+        .info-section {
+            background-color: #e8f4fc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .tab.active {
+            border: 1px solid #ddd;
+            border-bottom: 1px solid white;
+            border-radius: 5px 5px 0 0;
+            background-color: white;
+            margin-bottom: -1px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .warning {
+            background-color: #ffe6b3;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ff9900;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Expert Medical Diagnosis Assistant</h1>
+        
+        <div class="warning">
+            <strong>Important:</strong> This system is for educational purposes only. Always consult a healthcare professional for medical diagnosis.
+        </div>
+        
+        <div class="tab-container">
+            <div class="tab active" onclick="switchTab('diagnosis')">Symptom Checker</div>
+            <div class="tab" onclick="switchTab('info')">AI in Medicine</div>
+        </div>
+        
+        <div id="diagnosis-tab" class="tab-content active">
+            <div class="section">
+                <h2>Patient Information</h2>
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" min="0" max="120" value="35">
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select id="gender" name="gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>Select Symptoms</h2>
+                <div class="symptoms-grid" id="symptoms-container">
+                    <!-- Symptoms will be populated by JavaScript -->
+                </div>
+                <button type="button" onclick="diagnose()">Diagnose</button>
+            </div>
+            
+            <div class="section">
+                <h2>Diagnosis Results</h2>
+                <div id="results" class="results">
+                    <p>Please select symptoms and click "Diagnose" to see results.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="info-tab" class="tab-content">
+            <div class="info-section">
+                <h2>Advanced AI Applications in Medicine</h2>
+                <h3>Computer Vision in Medical Imaging</h3>
+                <p>AI-powered computer vision systems are revolutionizing medical imaging by:</p>
+                <ul>
+                    <li>Detecting abnormalities in X-rays, CT scans, and MRIs with accuracy rivaling human radiologists</li>
+                    <li>Identifying early signs of diseases like cancer, often before they're visible to the human eye</li>
+                    <li>Reducing diagnostic errors and improving early detection rates</li>
+                    <li>Speeding up analysis, allowing healthcare professionals to focus on complex cases</li>
+                </ul>
+                
+                <h3>Machine Learning for Disease Outbreak Prediction</h3>
+                <p>ML models are transforming epidemiology and public health by:</p>
+                <ul>
+                    <li>Analyzing vast datasets to predict disease spread patterns</li>
+                    <li>Identifying risk factors and potential outbreak hotspots</li>
+                    <li>Optimizing resource allocation for preventive measures</li>
+                    <li>Monitoring real-time data from multiple sources for early warning signs</li>
+                </ul>
+                
+                <h3>Beyond Rule-Based Systems</h3>
+                <p>While rule-based expert systems have value, modern AI goes beyond by:</p>
+                <ul>
+                    <li>Learning from data patterns rather than relying solely on predefined rules</li>
+                    <li>Adapting to new information and evolving medical knowledge</li>
+                    <li>Handling complex, multivariate relationships that are difficult to encode in rules</li>
+                    <li>Integrating diverse data sources (genetic, clinical, lifestyle) for personalized medicine</li>
+                </ul>
+                
+                <h3>Challenges and Considerations</h3>
+                <p>Despite the promise, AI in medicine faces challenges:</p>
+                <ul>
+                    <li>Ensuring data privacy and security</li>
+                    <li>Addressing biases in training data</li>
+                    <li>Maintaining transparency in AI decision-making</li>
+                    <li>Integrating AI tools into clinical workflows</li>
+                    <li>Establishing regulatory frameworks for AI-based medical devices</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Symptoms database
+        const symptoms = [
+            "fever", "cough", "headache", "sore_throat", "runny_nose", 
+            "sneezing", "fatigue", "muscle_aches", "nausea", "vomiting",
+            "diarrhea", "chest_pain", "shortness_of_breath", "dizziness", 
+            "rash", "abdominal_pain", "chills", "sweating", "loss_of_appetite",
+            "joint_pain", "back_pain", "difficulty_swallowing", "swollen_lymph_nodes",
+            "red_eyes", "ear_pain", "frequent_urination", "painful_urination",
+            "blurred_vision", "nosebleed", "palpitations"
+        ];
+        
+        // Populate symptoms checkboxes
+        const symptomsContainer = document.getElementById('symptoms-container');
+        symptoms.forEach(symptom => {
+            const formattedName = symptom.replace(/_/g, ' ');
+            const div = document.createElement('div');
+            div.className = 'symptom-checkbox';
+            div.innerHTML = `
+                <input type="checkbox" id="symptom_${symptom}" name="symptoms" value="${symptom}">
+                <label for="symptom_${symptom}">${formattedName}</label>
+            `;
+            symptomsContainer.appendChild(div);
+        });
+        
+        // Mock diagnosis function (in a real system, this would call the Prolog backend)
+        function diagnose() {
+            const selectedSymptoms = [];
+            document.querySelectorAll('input[name="symptoms"]:checked').forEach(checkbox => {
+                selectedSymptoms.push(checkbox.value);
+            });
+            
+            const age = document.getElementById('age').value;
+            const gender = document.getElementById('gender').value;
+            
+            if (selectedSymptoms.length === 0) {
+                alert('Please select at least one symptom.');
+                return;
+            }
+            
+            // For demo purposes, we'll use mock data
+            // In a real scenario, this would fetch from the Prolog server
+            const mockDiagnoses = generateMockDiagnoses(selectedSymptoms, age, gender);
+            displayResults(mockDiagnoses);
+        }
+        
+        function generateMockDiagnoses(selectedSymptoms, age, gender) {
+            // This is a simplified mock diagnosis generator
+            // A real system would use the Prolog backend for actual logical inference
+            
+            const diseases = [
+                {
+                    name: "Common Cold",
+                    probability: 65,
+                    description: "Viral infection of the upper respiratory tract",
+                    symptoms: ["fever", "cough", "sore_throat", "runny_nose", "sneezing", "fatigue"]
+                },
+                {
+                    name: "Influenza",
+                    probability: 45,
+                    description: "Viral infection that attacks your respiratory system",
+                    symptoms: ["fever", "cough", "headache", "muscle_aches", "chills", "sweating", "fatigue"]
+                },
+                {
+                    name: "COVID-19",
+                    probability: 40,
+                    description: "Respiratory illness caused by the SARS-CoV-2 virus",
+                    symptoms: ["fever", "cough", "shortness_of_breath", "fatigue", "loss_of_appetite", "muscle_aches"]
+                },
+                {
+                    name: "Strep Throat",
+                    probability: 35,
+                    description: "Bacterial infection that causes inflammation and pain in the throat",
+                    symptoms: ["sore_throat", "fever", "headache", "difficulty_swallowing", "swollen_lymph_nodes"]
+                },
+                {
+                    name: "Gastroenteritis",
+                    probability: 30,
+                    description: "Inflammation of the stomach and intestines",
+                    symptoms: ["nausea", "vomiting", "diarrhea", "abdominal_pain", "fever", "headache"]
+                },
+                {
+                    name: "Pneumonia",
+                    probability: 25,
+                    description: "Infection that inflames air sacs in one or both lungs",
+                    symptoms: ["cough", "fever", "chills", "shortness_of_breath", "chest_pain", "fatigue"]
+                },
+                {
+                    name: "Urinary Tract Infection",
+                    probability: 20,
+                    description: "Infection in any part of the urinary system",
+                    symptoms: ["frequent_urination", "painful_urination", "abdominal_pain", "fever"]
+                },
+                {
+                    name: "Allergic Rhinitis",
+                    probability: 15,
+                    description: "Allergic response causing nasal congestion, runny nose, and sneezing",
+                    symptoms: ["sneezing", "runny_nose", "red_eyes", "fatigue"]
+                },
+                {
+                    name: "Migraine",
+                    probability: 10,
+                    description: "Headache characterized by intense throbbing pain, often with nausea and sensitivity to light",
+                    symptoms: ["headache", "nausea", "dizziness", "blurred_vision"]
+                },
+                {
+                    name: "Hypertension",
+                    probability: 5,
+                    description: "High blood pressure that can lead to serious health complications",
+                    symptoms: ["headache", "dizziness", "palpitations", "nosebleed"]
+                }
+            ];
+            
+            // Calculate probability based on symptom matches
+            const diagnoses = diseases.map(disease => {
+                let matchCount = 0;
+                selectedSymptoms.forEach(symptom => {
+                    if (disease.symptoms.includes(symptom)) {
+                        matchCount++;
+                    }
+                });
+                
+                const matchPercentage = (matchCount / disease.symptoms.length) * 100;
+                let probability = Math.min(matchPercentage, disease.probability);
+                
+                // Adjust based on age and gender (simplified)
+                if (disease.name === "Hypertension" && age > 50) probability += 20;
+                if (disease.name === "Urinary Tract Infection" && gender === "female") probability += 15;
+                
+                return {
+                    name: disease.name,
+                    probability: Math.min(95, Math.max(5, Math.round(probability))), // Keep between 5-95%
+                    description: disease.description,
+                    recommended_actions: [
+                        "Consult with a healthcare professional",
+                        "Get proper rest and hydration",
+                        "Monitor symptoms for changes"
+                    ]
+                };
+            });
+            
+            // Sort by probability (highest first) and return top 3
+            return diagnoses.sort((a, b) => b.probability - a.probability).slice(0, 3);
+        }
+        
+        function displayResults(diagnoses) {
+            const resultsDiv = document.getElementById('results');
+            
+            if (diagnoses.length === 0) {
+                resultsDiv.innerHTML = '<p>No matching conditions found based on the symptoms provided.</p>';
+                return;
+            }
+            
+            let html = '';
+            
+            diagnoses.forEach(disease => {
+                html += `<div class="disease-card">
+                    <h3>${disease.name} <span class="probability">${disease.probability}% probability</span></h3>
+                    <p><strong>Description:</strong> ${disease.description}</p>
+                    <p><strong>Recommended Actions:</strong></p>
+                    <ul>`;
+                
+                disease.recommended_actions.forEach(action => {
+                    html += `<li>${action}</li>`;
+                });
+                
+                html += `</ul></div>`;
+            });
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>
